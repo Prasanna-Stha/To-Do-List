@@ -2,21 +2,22 @@ import { useState } from "react";
 
 const ToDoList = () => {
   const [showInput, setShowInput] = useState(false);
-  const [content, setContent] = useState("");        // State for the title
-  const [description, setDescription] = useState("");   ; // State for the textarea
-  const [tasks, setTasks] = useState([]);   // State for the task list
-  const [lightTheme, setLightTheme] = useState(true);     //change theme
+  const [content, setContent] = useState("");
+  const [description, setDescription] = useState("");
+  const [tasks, setTasks] = useState([]);
+  const [showCompleted, setShowCompleted] = useState(false);
+  const [lightTheme, setLightTheme] = useState(true);
 
   const displayForm = () => {
     setShowInput(!showInput);
   };
 
   const handleTitleChange = (event) => {
-    setContent(event.target.value);   // Update title state
+    setContent(event.target.value);
   };
 
   const handleDescriptionChange = (event) => {
-    setDescription(event.target.value);   // Update description state
+    setDescription(event.target.value);
   };
 
   const setTask = () => {
@@ -25,18 +26,18 @@ const ToDoList = () => {
       ...prevTasks,
       { content, description, show: false, completed: false },
     ]);
-    setContent("");   // Clear title input
-    setDescription("");    // Clear description input
+    setContent("");
+    setDescription("");
     setShowInput(false);
   };
 
   const toggleDescription = (index) => {
     setTasks((prevTasks) =>
-      prevTasks.map((task, i) =>{
-        if(i === index) {
-          return { ...task, show: !task.show }    // Toggling the description visibility
-        } 
-        return task
+      prevTasks.map((task, i) => {
+        if (i === index) {
+          return { ...task, show: !task.show };
+        }
+        return task;
       })
     );
   };
@@ -44,18 +45,17 @@ const ToDoList = () => {
   const markAsCompleted = (index) => {
     setTasks((prevTasks) =>
       prevTasks.map((task, i) => {
-        if(i === index){
-          return { ...task, completed: !task.completed }   // Toggle completed status
-        } 
-        return task
-      }
-      )
+        if (i === index) {
+          return { ...task, completed: !task.completed };
+        }
+        return task;
+      })
     );
   };
 
   const deleteTask = (index) => {
     if (window.confirm("Are you sure you want to delete this task?")) {
-      setTasks((prevTasks) => prevTasks.filter((_, i) => i !== index));   // Remove task by index
+      setTasks((prevTasks) => prevTasks.filter((_, i) => i !== index));
     }
   };
 
@@ -67,68 +67,153 @@ const ToDoList = () => {
   const pendingTasks = tasks.filter((task) => !task.completed);
 
   return (
-    <div className={`w-screen h-screen ${lightTheme ? "bg-white" : "bg-[#121212]"}`}>
-      <button className={`px-3 py-2 border ${lightTheme ? "text-black" : "text-white"}`} onClick={changeTheme}>
-        {lightTheme ? "Dark Theme" : "Light Theme"}
-      </button>
+    <div className={`w-screen h-screen ${lightTheme ? "bg-[#f9fafb]" : "bg-[#1e1e1e]"}`}>
+      <div className="flex justify-end p-4">
+        <button
+          className={`px-4 py-2 rounded-md ${
+            lightTheme ? "bg-[#e0e7ff] text-[#1e3a8a]" : "bg-[#333] text-white"
+          }`}
+          onClick={changeTheme}
+        >
+          {lightTheme ? "Dark Theme" : "Light Theme"}
+        </button>
+      </div>
 
-      {/* all the content are here (the box where all contents are present)*/}
-      <div className={`w-full sm:w-[70vw] mx-auto border-2 p-4 ${lightTheme ? "bg-white text-black" : "bg-[#121212] text-white"}`}>
-        <button className="w-full p-4 border border-[#d9d9d9]" onClick={displayForm}>+ Add new task</button>
+      <div
+        className="w-full sm:w-[50vw] mx-auto p-6 rounded-lg"
+        style={{
+          boxShadow: lightTheme
+            ? "0 4px 10px rgba(0, 0, 0, 0.1)"
+            : "0 4px 10px rgba(0, 0, 0, 0.4)",
+          background: lightTheme ? "#f5f5f5" : "linear-gradient(135deg, #434343, #1f1f1f)", // Soft greyish white
+        }}
+      >
+        <div className="flex justify-between items-center">
+          <h1
+            className={`text-2xl font-semibold ${
+              lightTheme ? "text-[#1e3a8a]" : "text-white"
+            }`}
+          >
+            To-Do List
+          </h1>
+          <button
+            className={`px-4 py-2 rounded-md ${
+              lightTheme ? "bg-[#e0e7ff] text-[#1e3a8a]" : "bg-[#4caf50] text-white"
+            }`}
+            onClick={displayForm}
+          >
+            + Add Task
+          </button>
+        </div>
 
-        {/* input box for taking notes */}
         {showInput && (
-          <div>
-            <input type="text" placeholder="Title goes here.." className="w-full p-2 outline-none font-semibold bg-transparent" value={content} onChange={handleTitleChange} />
-            <textarea placeholder="I have something to do tomorrow..." className="border w-full p-4 bg-transparent" value={description} onChange={handleDescriptionChange} />
-            <button className="border px-4 py-2 bg-[#4267B2] text-white" onClick={setTask}>Add task</button>
+          <div className="mt-4">
+            <input
+              type="text"
+              placeholder="Task Title"
+              className="w-full p-2 border rounded-md mb-3 outline-none text-black"
+              value={content}
+              onChange={handleTitleChange}
+            />
+            <textarea
+              placeholder="Task Description"
+              className="w-full p-2 border rounded-md mb-3 outline-none text-black"
+              value={description}
+              onChange={handleDescriptionChange}
+            ></textarea>
+            <button
+              className="px-4 py-2 bg-[#4caf50] text-white rounded-md"
+              onClick={setTask}
+            >
+              Save Task
+            </button>
           </div>
         )}
 
-        <div className="flex flex-wrap">
-          {/* added tasks here */}
-          <div className="w-full md:w-1/2 p-2">
-            {/* pending tasks  */}
-            <h2 className="font-bold text-lg">Pending Tasks</h2>
-            {pendingTasks.map((task, index) => (
-              <div key={index} className={`border px-4 py-2 my-2 cursor-pointer ${lightTheme ? "hover:bg-slate-100" : "hover:bg-gray-700"} rounded-md flex justify-between items-center`}
-                onClick={() => toggleDescription(index)}>
-                <div>
-                  <h1 className={`font-bold ${task.completed ? "line-through text-gray-400" : ""}`}>{task.content}</h1>
-                  {task.show && (
-                    <p className={`text-gray-600 ${lightTheme ? "text-black" : "text-white"}`}>
-                      {task.description}
-                    </p>
-                  )}
+        <div className="mt-6">
+          <h2
+            className={`text-lg font-medium ${
+              lightTheme ? "text-gray-800" : "text-white"
+            }`}
+          >
+            Pending Tasks
+          </h2>
+          {pendingTasks.map((task, index) => (
+            <div
+              key={index}
+              className="mt-4 flex justify-between items-center border-b pb-2"
+            >
+              <div>
+                <div
+                  className={`font-semibold cursor-pointer ${
+                    task.completed ? "line-through text-gray-500" : ""
+                  } hover:underline`}
+                  onClick={() => toggleDescription(index)}
+                >
+                  {task.content}
                 </div>
-                <div className="flex gap-2">
-                  <button className="py-1 px-2 sm:py-1 sm:px-4 bg-green-600 text-white rounded-sm hover:bg-green-700" onClick={(e) => {
-                      e.stopPropagation();
-                      markAsCompleted(index);
-                    }}>
-                    {task.completed ? "Undo" : "Completed"}
-                  </button>
-                  <button className="py-1 px-2 sm:py-1 sm:px-4 bg-red-600 text-white rounded-sm hover:bg-red-700" onClick={(e) => {
-                      e.stopPropagation();
-                      deleteTask(index);
-                    }}>Delete</button>
-                </div>
+                {task.show && (
+                  <p
+                    className={`mt-1 ${
+                      lightTheme ? "text-gray-700" : "text-gray-300"
+                    }`}
+                  >
+                    {task.description}
+                  </p>
+                )}
               </div>
-            ))}
-          </div>
-
-
-          {/* added tasks here */}
-          <div className="w-full md:w-1/2 p-2">
-            <h2 className="font-bold text-lg">Completed Tasks</h2>
-            {completedTasks.map((task, index) => (
-              <div key={index} className={`border px-4 py-2 my-2 ${lightTheme ? "hover:bg-slate-100" : "hover:bg-gray-700"} rounded-md`}>
-                <h1 className="font-bold line-through text-gray-400">{task.content}</h1>
-                <button className="py-1 px-2 sm:py-1 sm:px-4 bg-green-600 text-white rounded- hover:bg-green-700 mt-2" onClick={() => markAsCompleted(index)}>Undo</button>
+              <div className="flex gap-2">
+                <button
+                  className="px-4 py-2 bg-[#4caf50] text-white rounded-md"
+                  onClick={() => markAsCompleted(index)}
+                >
+                  {task.completed ? "Undo" : "Completed"}
+                </button>
+                <button
+                  className="px-4 py-2 bg-red-500 text-white rounded-md"
+                  onClick={() => deleteTask(index)}
+                >
+                  Delete
+                </button>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
+
+        <button
+          className="mt-6 px-4 py-2 bg-[#007bff] text-white rounded-md"
+          onClick={() => setShowCompleted(!showCompleted)}
+        >
+          {showCompleted ? "Hide Completed Tasks" : "Show Completed Tasks"}
+        </button>
+
+        {showCompleted && completedTasks.length > 0 && (
+          <div className="mt-6">
+            <h2
+              className={`text-lg font-medium ${
+                lightTheme ? "text-gray-800" : "text-white"
+              }`}
+            >
+              Completed Tasks
+            </h2>
+            {completedTasks.map((task, index) => (
+              <div
+                key={index}
+                className="mt-4 flex justify-between items-center border-b pb-2"
+              >
+                <div className="font-semibold text-gray-500">
+                  {task.content}
+                </div>
+                <button
+                  className="px-4 py-2 bg-[#4caf50] text-white rounded-md"
+                  onClick={() => markAsCompleted(index)}
+                >
+                  Undo
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
