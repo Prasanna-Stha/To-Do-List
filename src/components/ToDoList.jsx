@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SearchBox from "./SearchBox.jsx";
 
 const ToDoList = () => {
   const [showInput, setShowInput] = useState(false);
@@ -67,14 +68,20 @@ const ToDoList = () => {
   const pendingTasks = tasks.filter((task) => !task.completed);
 
   return (
-    <div className={`w-screen h-screen ${lightTheme ? "bg-[#f9fafb]" : "bg-[#1e1e1e]"}`}>
+    <div className={`w-screen h-screen ${lightTheme ? "bg-[#f9fafb]" : "bg-[#1e1e1e]"} overflow-x-hidden`}>
+
+      {/* main box */}
+      <div className="w-full sm:w-[50vw] mx-auto p-6 rounded-lg flex flex-col gap-6">
       <div className="flex justify-end p-4">
         <button className={`px-4 py-2 rounded-md ${lightTheme ? "bg-[#e0e7ff] text-[#1e3a8a]" : "bg-[#333] text-white"}`} onClick={changeTheme}>
           {lightTheme ? "Dark Theme" : "Light Theme"}
         </button>
       </div>
 
-      <div className="w-full sm:w-[50vw] mx-auto p-6 rounded-lg" style={{ boxShadow: lightTheme ? "0 4px 10px rgba(1px, 1px, 10px, 10px, 0.1)" : "0 4px 10px rgba(0, 0, 0, 0.4)", background: lightTheme ? "#f5f5f5" : "#1f1f1f" }}>
+      <div className="mx-auto w-fit">
+      <SearchBox tasks={tasks} />
+      </div>
+      <div className="w-full mx-auto p-6 rounded-lg" style={{ boxShadow: lightTheme ? "0 4px 10px rgba(1px, 1px, 10px, 10px, 0.1)" : "0 4px 10px rgba(0, 0, 0, 0.4)", background: lightTheme ? "#f5f5f5" : "#1f1f1f" }}>
         <div className="flex justify-between items-center">
           <h1 className={`text-2xl font-semibold ${lightTheme ? "text-[#1e3a8a]" : "text-white"}`}>To-Do List</h1>
           <button className={`px-4 py-2 rounded-md ${lightTheme ? "bg-[#e0e7ff] text-[#1e3a8a]" : "bg-[#4caf50] text-white"}`} onClick={displayForm}>+ Add Task</button>
@@ -83,6 +90,7 @@ const ToDoList = () => {
         {showInput && (
           <div className="mt-4">
             <input type="text" placeholder="Task Title" className={`w-full p-2 border rounded-md mb-3 outline-none bg-transparent ${lightTheme ? "text-black" : "text-white"}`} value={content} onChange={handleTitleChange} />
+
             <textarea placeholder="Task Description" className={`w-full p-2 border rounded-md mb-3 outline-none text-black bg-transparent ${lightTheme ? "text-black" : "text-white"}`} value={description} onChange={handleDescriptionChange}></textarea>
             <button className="px-4 py-2 bg-[#4caf50] text-white rounded-md bg-tra" onClick={setTask}>Save Task</button>
           </div>
@@ -129,6 +137,7 @@ const ToDoList = () => {
             ))}
           </div>
         )}
+      </div>
       </div>
     </div>
   );
