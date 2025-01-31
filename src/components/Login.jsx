@@ -30,7 +30,7 @@ const Login = () => {
                     <input
                         placeholder="Username"
                         type="text"
-                        className="w-full h-10 pl-3 py-2 border rounded-sm border-gray-400 mt-1 outline-none focus:border-2 bg-transparent"
+                        className={`w-full h-10 pl-3 py-2 border rounded-sm border-gray-400 mt-1 outline-none focus:border-2 bg-transparent ${lightTheme ? "":"text-white"}`}
                         autoComplete="off"
                         {...register("userName", {
                             minLength: { value: 3, message: "Username must be at least 3 characters." },
@@ -44,9 +44,9 @@ const Login = () => {
                     <label className={`${lightTheme ? "":"text-white"}`}>Password:</label>
                     <div className="relative w-full">
                         <input
-                            placeholder="password"
+                            placeholder="password"  
                             type={showPassword ? "text" : "password"}
-                            className="w-full h-10 pl-3 py-2 border rounded-sm border-gray-400 mt-1 outline-none focus:border-2 bg-transparent"
+                            className={`w-full h-10 pl-3 py-2 border rounded-sm border-gray-400 mt-1 outline-none focus:border-2 bg-transparent ${lightTheme ? "":"text-white"}`}
                             autoComplete="off"
                             {...register("password", {
                                 minLength: { value: 6, message: "Password must be at least 6 characters." },

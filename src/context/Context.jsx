@@ -1,10 +1,21 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 
 export const TaskContext = createContext();
 
 export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
   const [lightTheme, setLightTheme] = useState(true);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      setLightTheme(savedTheme === "light");
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("theme", lightTheme ? "light" : "dark");
+  }, [lightTheme]);
 
   const addTask = (content, description) => {
     setTasks((prevTasks) => [
